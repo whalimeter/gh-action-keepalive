@@ -1,11 +1,13 @@
 # Keepalive Workflows
 
-Workflows will be automatically disabled by GitHub after 60 days of inactivity
+Workflows will be automatically disabled by GitHub after 60 days of [inactivity]
 on the default branch. This action is an **attempt** to keep alive all workflows
 of the repository in which it is run at regular intervals. The action toggles
 off, then on all active workflows in the repository that it is run in. This is
 an **attempt** to reset the activity workflow timer and bypass the 60 days
 restriction.
+
+  [inactivity]: https://docs.github.com/en/actions/managing-workflow-runs/disabling-and-enabling-a-workflow
 
 ## Usage
 
