@@ -1,0 +1,44 @@
+name: Keepalive Workflows
+description: |
+  Turns off and then back all workflows on the repository this action is run on
+  to ensure that they are not automatically disabled after 60 days of
+  inactivity.
+author: Emmanuel Frecon <efrecon+github@gmail.com>
+branding:
+  icon: activity
+  color: green
+
+inputs:
+  sleep:
+    description: |
+      Number of seconds to sleep between activity toggle.
+    required: false
+    default: "1"
+  token:
+    description: |
+      Token with enough privileges (repo:* scope) to perform action state
+      operations.
+    required: true
+    default: "${{ github.token }}"
+  options:
+    description: |
+      Additional options to keepalive script, e.g. -v to print out additional
+      verbose information. This is a semi-internal input and should only be used
+      for debugging.
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    -
+      name: Activity Keeper
+      id: activator
+      shell: bash
+      run: |
+        ${{ github.action_path }}/keepalive.sh \
+          -t '${{ inputs.token }}' \
+          -s '${{ inputs.sleep }}' \
+          ${{ inputs.options }} \
+          -- \
+            '${{ github.repository }}'
