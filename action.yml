@@ -18,7 +18,7 @@ inputs:
     description: |
       Token with enough privileges (repo:* scope) to perform action state
       operations.
-    required: true
+    required: false
     default: "${{ github.token }}"
   options:
     description: |
