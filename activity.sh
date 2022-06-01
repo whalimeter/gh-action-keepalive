@@ -73,7 +73,7 @@ _verbose() {
 }
 
 _warn() { printf %s\\n "$1" >&2; }
-_error() { warn "$1" && exit 1; }
+_error() { _warn "$1" && exit 1; }
 
 # curl wrapper around the GH API. This automatically inserts the authorization
 # token and the path to the API
