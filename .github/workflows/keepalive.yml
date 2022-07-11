@@ -15,13 +15,13 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
       - name: keepalive
-        if: github.event == 'schedule'
+        if: github.event_name == 'schedule'
         uses: ./
         with:
           options: -v
       - name: force keepalive
-        if: github.event != 'schedule'
+        if: github.event_name != 'schedule'
         uses: ./
         with:
           options: -v
-          timeout: 0  
+          timeout: 0
