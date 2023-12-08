@@ -17,7 +17,7 @@ inputs:
       generating a commit. The default is 41 days, i.e. just above 2/3 of the
       GitHub inactivity trigger.
     required: false
-    default: 3542400
+    default: "3542400"
   liveness:
     description: |
       Path (relative to repository) to a file where a marker will be
@@ -36,11 +36,10 @@ inputs:
     required: false
     default: "${{ github.token }}"
   options:
-    description: |
-      Additional options to `activity.sh` script, e.g. -v to print out
-      additional verbose information. This is a semi-internal input and should
-      only be used for debugging.
     required: false
+    deprecationMessage: |
+      This input is deprecated and will be removed in a future version. Use
+      environment variables instead!
     default: ""
   marker:
     description: |
@@ -61,7 +60,7 @@ runs:
     -
       name: Minimal Checkout
       id: checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: ${{ github.repository }}
         fetch-depth: 1
@@ -71,12 +70,11 @@ runs:
       shell: bash
       env:
         ACTIVITY_GHAPI: ${{ github.api_url }}
+        ACTIVITY_TIMEOUT: ${{ inputs.timeout }}
+        ACTIVITY_TOKEN: ${{ inputs.token }}
+        ACTIVITY_LIVENESS_PATH: ${{ inputs.liveness }}
       run: |
-        ${{ github.action_path }}/activity.sh \
-          -t '${{ inputs.token }}' \
-          -m '${{ inputs.timeout }}' \
-          -l '${{ inputs.liveness }}' \
-          ${{ inputs.options }} \
+        "${{ github.action_path }}/activity.sh" -v \
           -- \
             '${{ inputs.marker }}' \
             '${{ github.repository }}'
