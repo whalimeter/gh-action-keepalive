@@ -73,8 +73,9 @@ runs:
         ACTIVITY_TIMEOUT: ${{ inputs.timeout }}
         ACTIVITY_TOKEN: ${{ inputs.token }}
         ACTIVITY_LIVENESS_PATH: ${{ inputs.liveness }}
+        ACTIVITY__MARKER: ${{ inputs.marker }}
       run: |
         "${{ github.action_path }}/activity.sh" -v \
           -- \
-            '${{ inputs.marker }}' \
+            "$ACTIVITY__MARKER" \
             '${{ github.repository }}'
