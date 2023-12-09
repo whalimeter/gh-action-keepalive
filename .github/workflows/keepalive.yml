@@ -17,8 +17,12 @@ jobs:
       - name: keepalive
         if: github.event_name == 'schedule'
         uses: ./
+        env:
+          ACTIVITY_BRANCH: "github/keepalive"
       - name: force keepalive
         if: github.event_name != 'schedule'
         uses: ./
+        env:
+          ACTIVITY_BRANCH: "github/keepalive"
         with:
           timeout: 0
