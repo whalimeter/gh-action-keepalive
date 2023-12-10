@@ -104,6 +104,8 @@ branch() {
   fi
 }
 
+branch_exists() { git branch --quiet --no-color --format '%(refname:short)' | grep -q "${1:-"main"}"; }
+
 workflow_name() {
   grep -E '^name:' "$1" |
     sed -E \
@@ -181,7 +183,11 @@ branch_current=$(git rev-parse --abbrev-ref HEAD)
 _verbose "Default branch: $branch_default, currently on: $branch_current"
 
 # Detect number of seconds since latest commit onto the default branch
-date_activity=$(date -d "$(git log -1 --format=%cd --date=iso-strict "$branch_default")" +%s)
+if branch_exists "$branch_default"; then
+  date_activity=$(date -d "$(git log -1 --format=%cd --date=iso-strict "$branch_default")" +%s)
+else
+  date_activity=0;  # no branch? => never active!
+fi
 date_now=$(date +%s)
 elapsed=$(( date_now - date_activity ))
 
@@ -194,8 +200,13 @@ if [ "$elapsed" -gt "$ACTIVITY_TIMEOUT" ]; then
   # Change to the default branch as this is where activity detection happens at
   # github.
   if [ "$branch_current" != "$branch_default" ]; then
-    git switch "$branch_default"
+    if branch_exists "$branch_default"; then
+      git switch "$branch_default"
+    else
+      git switch --create "$branch_default"
+    fi
   fi
+  exit
 
   # Resolve workflow id or path to its location on disk. This is the file that
   # we will be pushing a commit onto.
